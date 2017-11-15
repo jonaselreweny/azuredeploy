@@ -18,8 +18,8 @@
             "defaultValue": "OntimeDeployAppSvcPlan",
             "type": "String"
         },
-        "hostNameBindings_ontimedeploy.azurewebsites.net_name": {
-            "defaultValue": "ontimedeploy.azurewebsites.net",
+        "hostNameBindings": {
+            "defaultValue": ".azurewebsites.net",
             "type": "String"
         }
     },
@@ -213,7 +213,7 @@
         {
             "comments": "Generalized from resource: '/subscriptions/637e6354-81b4-4338-b6e8-b461cf323259/resourceGroups/Ontime1.0/providers/Microsoft.Web/sites/OntimeDeploy/hostNameBindings/ontimedeploy.azurewebsites.net'.",
             "type": "Microsoft.Web/sites/hostNameBindings",
-            "name": "[concat(parameters('siteName'), '/', parameters('hostNameBindings_ontimedeploy.azurewebsites.net_name'))]",
+            "name": "[concat(parameters('siteName'), '/', parameters('hostNameBindings'))]",
             "apiVersion": "2016-08-01",
             "location": "[parameters('siteLocation')]",
             "scale": null,
