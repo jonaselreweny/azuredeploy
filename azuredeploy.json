@@ -6,6 +6,10 @@
             "defaultValue": "Ontime",
             "type": "String"
         },
+        "siteLocation": {
+            "defaultValue": "North Europe",
+            "type": "String"
+        },
         "config_web_name": {
             "defaultValue": "web",
             "type": "String"
@@ -34,7 +38,7 @@
             "kind": "app",
             "name": "[parameters('serverfarms_OntimeDeployAppSvcPlan_name')]",
             "apiVersion": "2016-09-01",
-            "location": "North Europe",
+            "location": "[parameters('siteLocation')]",
             "scale": null,
             "properties": {
                 "name": "[parameters('serverfarms_OntimeDeployAppSvcPlan_name')]",
@@ -54,7 +58,7 @@
             "kind": "app",
             "name": "[parameters('siteName')]",
             "apiVersion": "2016-08-01",
-            "location": "North Europe",
+            "location": "[parameters('siteLocation')]",
             "tags": {
                 "hidden-related:/subscriptions/637e6354-81b4-4338-b6e8-b461cf323259/resourcegroups/Ontime1.0/providers/Microsoft.Web/serverfarms/OntimeDeployAppSvcPlan": "empty"
             },
@@ -100,7 +104,7 @@
             "type": "Microsoft.Web/sites/config",
             "name": "[concat(parameters('siteName'), '/', parameters('config_web_name'))]",
             "apiVersion": "2016-08-01",
-            "location": "North Europe",
+            "location": "[parameters('siteLocation')]",
             "tags": {
                 "hidden-related:/subscriptions/637e6354-81b4-4338-b6e8-b461cf323259/resourcegroups/Ontime1.0/providers/Microsoft.Web/serverfarms/OntimeDeployAppSvcPlan": "empty"
             },
@@ -211,7 +215,7 @@
             "type": "Microsoft.Web/sites/hostNameBindings",
             "name": "[concat(parameters('siteName'), '/', parameters('hostNameBindings_ontimedeploy.azurewebsites.net_name'))]",
             "apiVersion": "2016-08-01",
-            "location": "North Europe",
+            "location": "[parameters('siteLocation')]",
             "scale": null,
             "properties": {
                 "siteName": "OntimeDeploy",
