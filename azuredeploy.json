@@ -2,8 +2,8 @@
     "$schema": "https://schema.management.azure.com/schemas/2015-01-01/deploymentTemplate.json#",
     "contentVersion": "1.0.0.0",
     "parameters": {
-        "sites_OntimeDeploy_name": {
-            "defaultValue": "OntimeDeploy",
+        "siteName": {
+            "defaultValue": "Ontime",
             "type": "String"
         },
         "config_web_name": {
@@ -52,7 +52,7 @@
             "comments": "Generalized from resource: '/subscriptions/637e6354-81b4-4338-b6e8-b461cf323259/resourceGroups/Ontime1.0/providers/Microsoft.Web/sites/OntimeDeploy'.",
             "type": "Microsoft.Web/sites",
             "kind": "app",
-            "name": "[parameters('sites_OntimeDeploy_name')]",
+            "name": "[parameters('siteName')]",
             "apiVersion": "2016-08-01",
             "location": "North Europe",
             "tags": {
@@ -63,7 +63,7 @@
                 "enabled": true,
                 "hostNameSslStates": [
                     {
-                        "name": "[concat(parameters('sites_OntimeDeploy_name'),'ontimedeploy.azurewebsites.net')]",
+                        "name": "[concat(parameters('siteName'),'ontimedeploy.azurewebsites.net')]",
                         "sslState": "Disabled",
                         "virtualIP": null,
                         "thumbprint": null,
@@ -71,7 +71,7 @@
                         "hostType": "Standard"
                     },
                     {
-                        "name": "[concat(parameters('sites_OntimeDeploy_name'),'ontimedeploy.scm.azurewebsites.net')]",
+                        "name": "[concat(parameters('siteName'),'ontimedeploy.scm.azurewebsites.net')]",
                         "sslState": "Disabled",
                         "virtualIP": null,
                         "thumbprint": null,
@@ -98,7 +98,7 @@
         {
             "comments": "Generalized from resource: '/subscriptions/637e6354-81b4-4338-b6e8-b461cf323259/resourceGroups/Ontime1.0/providers/Microsoft.Web/sites/OntimeDeploy/config/web'.",
             "type": "Microsoft.Web/sites/config",
-            "name": "[concat(parameters('sites_OntimeDeploy_name'), '/', parameters('config_web_name'))]",
+            "name": "[concat(parameters('siteName'), '/', parameters('config_web_name'))]",
             "apiVersion": "2016-08-01",
             "location": "North Europe",
             "tags": {
@@ -203,13 +203,13 @@
                 "ipSecurityRestrictions": null
             },
             "dependsOn": [
-                "[resourceId('Microsoft.Web/sites', parameters('sites_OntimeDeploy_name'))]"
+                "[resourceId('Microsoft.Web/sites', parameters('siteName'))]"
             ]
         },
         {
             "comments": "Generalized from resource: '/subscriptions/637e6354-81b4-4338-b6e8-b461cf323259/resourceGroups/Ontime1.0/providers/Microsoft.Web/sites/OntimeDeploy/hostNameBindings/ontimedeploy.azurewebsites.net'.",
             "type": "Microsoft.Web/sites/hostNameBindings",
-            "name": "[concat(parameters('sites_OntimeDeploy_name'), '/', parameters('hostNameBindings_ontimedeploy.azurewebsites.net_name'))]",
+            "name": "[concat(parameters('siteName'), '/', parameters('hostNameBindings_ontimedeploy.azurewebsites.net_name'))]",
             "apiVersion": "2016-08-01",
             "location": "North Europe",
             "scale": null,
@@ -219,7 +219,7 @@
                 "hostNameType": "Verified"
             },
             "dependsOn": [
-                "[resourceId('Microsoft.Web/sites', parameters('sites_OntimeDeploy_name'))]"
+                "[resourceId('Microsoft.Web/sites', parameters('siteName'))]"
             ]
         }
     ]
