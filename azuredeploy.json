@@ -218,7 +218,7 @@
             "location": "[parameters('siteLocation')]",
             "scale": null,
             "properties": {
-                "siteName": "OntimeDeploy",
+                "siteName": "[parameters('siteName')]",
                 "domainId": null,
                 "hostNameType": "Verified"
             },
