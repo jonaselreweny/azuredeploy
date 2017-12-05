@@ -1,0 +1,124 @@
+{
+  "$schema": "https://schema.management.azure.com/schemas/2015-01-01/deploymentTemplate.json#",
+  "contentVersion": "1.0.0.0",
+  "outputs": {},
+  "parameters": {
+    "_artifactsLocation": {
+      "type": "string",
+      "defaultValue": "https://github.com/jonaselreweny/azuredeploy/raw/master/Resources/mydatabase.bacpac"
+    },
+    "adminLogin": {
+      "type": "string",
+      "minLength": 1
+    },
+    "adminPassword": {
+      "type": "securestring"
+    },
+    "mydatabaseCollation": {
+      "type": "string",
+      "minLength": 1,
+      "defaultValue": "SQL_Latin1_General_CP1_CI_AS"
+    },
+    "mydatabaseEdition": {
+      "type": "string",
+      "defaultValue": "Basic",
+      "allowedValues": [
+        "Basic",
+        "Standard",
+        "Premium"
+      ]
+    },
+    "mydatabaseName": {
+      "type": "string",
+      "minLength": 1
+    },
+    "mydatabaseRequestedServiceObjectiveName": {
+      "allowedValues": [
+        "Basic",
+        "S0",
+        "S1",
+        "S2",
+        "P1",
+        "P2",
+        "P3"
+      ],
+      "defaultValue": "Basic",
+      "metadata": {
+        "description": "Describes the performance level for Edition"
+      },
+      "type": "string"
+    }
+  },
+  "resources": [
+    {
+      "name": "[variables('myserverName')]",
+      "type": "Microsoft.Sql/servers",
+      "location": "[resourceGroup().location]",
+      "apiVersion": "2014-04-01-preview",
+      "dependsOn": [],
+      "tags": {
+        "displayName": "myserver"
+      },
+      "properties": {
+        "administratorLogin": "[parameters('adminLogin')]",
+        "administratorLoginPassword": "[parameters('adminPassword')]"
+      },
+      "resources": [
+        {
+          "name": "AllowAllWindowsAzureIps",
+          "type": "firewallrules",
+          "location": "[resourceGroup().location]",
+          "apiVersion": "2014-04-01-preview",
+          "dependsOn": [
+            "[resourceId('Microsoft.Sql/servers', variables('myserverName'))]"
+          ],
+          "properties": {
+            "startIpAddress": "0.0.0.0",
+            "endIpAddress": "0.0.0.0"
+          }
+        },
+        {
+          "name": "[parameters('mydatabaseName')]",
+          "type": "databases",
+          "location": "[resourceGroup().location]",
+          "apiVersion": "2014-04-01-preview",
+          "dependsOn": [
+            "[resourceId('Microsoft.Sql/servers', variables('myserverName'))]"
+          ],
+          "tags": {
+            "displayName": "mydatabase"
+          },
+          "properties": {
+            "collation": "[parameters('mydatabaseCollation')]",
+            "edition": "[parameters('mydatabaseEdition')]",
+            "maxSizeBytes": "1073741824",
+            "requestedServiceObjectiveName": "[parameters('mydatabaseRequestedServiceObjectiveName')]"
+          },
+          "resources": [
+            {
+              "name": "myimport",
+              "type": "extensions",
+              "apiVersion": "2014-04-01-preview",
+              "dependsOn": [
+                "[resourceId('Microsoft.Sql/servers/databases', split(concat(variables('myserverName'), '/', parameters('mydatabaseName')), '/')[0], split(concat(variables('myserverName'), '/', parameters('mydatabaseName')), '/')[1])]"
+              ],
+              "tags": {
+                "displayName": "myimport"
+              },
+              "properties": {
+                "administratorLogin": "[parameters('adminLogin')]",
+                "administratorLoginPassword": "[parameters('adminPassword')]",
+                "operationMode": "Import",
+                "storageUri": "[parameters('_artifactsLocation')]"
+              }
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "variables": {
+    "myserverName": "[concat('myserver', uniqueString(resourceGroup().id))]",
+    "storageKeyType": "SharedAccessKey"
+  }
+}
