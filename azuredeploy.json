@@ -62,8 +62,7 @@
             "name": "AllowAllWindowsAzureIps",
             "type": "firewallrules",
             "location": "[resourceGroup().location]",
-            "apiVersion": "2014-04-01-preview",
-            "dependsOn": [
+            "apiVersion": "2014-04-01-preview",            "dependsOn": [
               "[resourceId('Microsoft.Sql/servers', variables('myserverName'))]"
             ],
             "properties": {
@@ -105,7 +104,7 @@
                   "operationMode": "Import",
                   "storageKey": "[variables('_artifactsLocationSasToken')]",
                   "storageKeyType": "[variables('storageKeyType')]",
-                  "storageUri": "[(variables('_artifactsLocation')]"
+                  "storageUri": "[variables('_artifactsLocation')]"
                 }
               }
             ]
