@@ -1,124 +1,122 @@
 {
-  "$schema": "https://schema.management.azure.com/schemas/2015-01-01/deploymentTemplate.json#",
-  "contentVersion": "1.0.0.0",
-  "outputs": {},
-  "parameters": {
-    "_artifactsLocation": {
-      "type": "string",
-      "defaultValue": "https://github.com/jonaselreweny/azuredeploy/raw/master/Resources/mydatabase.bacpac"
-    },
-    "adminLogin": {
-      "type": "string",
-      "minLength": 1
-    },
-    "adminPassword": {
-      "type": "securestring"
-    },
-    "mydatabaseCollation": {
-      "type": "string",
-      "minLength": 1,
-      "defaultValue": "SQL_Latin1_General_CP1_CI_AS"
-    },
-    "mydatabaseEdition": {
-      "type": "string",
-      "defaultValue": "Basic",
-      "allowedValues": [
-        "Basic",
-        "Standard",
-        "Premium"
-      ]
-    },
-    "mydatabaseName": {
-      "type": "string",
-      "minLength": 1
-    },
-    "mydatabaseRequestedServiceObjectiveName": {
-      "allowedValues": [
-        "Basic",
-        "S0",
-        "S1",
-        "S2",
-        "P1",
-        "P2",
-        "P3"
-      ],
-      "defaultValue": "Basic",
-      "metadata": {
-        "description": "Describes the performance level for Edition"
+    "$schema": "https://schema.management.azure.com/schemas/2015-01-01/deploymentTemplate.json#",
+    "contentVersion": "1.0.0.0",
+    "outputs": {},
+    "parameters": {
+      "adminLogin": {
+        "type": "string",
+        "minLength": 1
       },
-      "type": "string"
-    }
-  },
-  "resources": [
-    {
-      "name": "[variables('myserverName')]",
-      "type": "Microsoft.Sql/servers",
-      "location": "[resourceGroup().location]",
-      "apiVersion": "2014-04-01-preview",
-      "dependsOn": [],
-      "tags": {
-        "displayName": "myserver"
+      "adminPassword": {
+        "type": "securestring"
       },
-      "properties": {
-        "administratorLogin": "[parameters('adminLogin')]",
-        "administratorLoginPassword": "[parameters('adminPassword')]"
+      "mydatabaseCollation": {
+        "type": "string",
+        "minLength": 1,
+        "defaultValue": "SQL_Latin1_General_CP1_CI_AS"
       },
-      "resources": [
-        {
-          "name": "AllowAllWindowsAzureIps",
-          "type": "firewallrules",
-          "location": "[resourceGroup().location]",
-          "apiVersion": "2014-04-01-preview",
-          "dependsOn": [
-            "[resourceId('Microsoft.Sql/servers', variables('myserverName'))]"
-          ],
-          "properties": {
-            "startIpAddress": "0.0.0.0",
-            "endIpAddress": "0.0.0.0"
-          }
+      "mydatabaseEdition": {
+        "type": "string",
+        "defaultValue": "Basic",
+        "allowedValues": [
+          "Standard",
+          "Premium"
+        ]
+      },
+      "mydatabaseName": {
+        "type": "string",
+        "minLength": 1
+      },
+      "mydatabaseRequestedServiceObjectiveName": {
+        "allowedValues": [
+          "S0",
+          "S1",
+          "S2",
+          "P1",
+          "P2",
+          "P3"
+        ],
+        "defaultValue": "S1",
+        "metadata": {
+          "description": "Describes the performance level for Edition"
         },
-        {
-          "name": "[parameters('mydatabaseName')]",
-          "type": "databases",
-          "location": "[resourceGroup().location]",
-          "apiVersion": "2014-04-01-preview",
-          "dependsOn": [
-            "[resourceId('Microsoft.Sql/servers', variables('myserverName'))]"
-          ],
-          "tags": {
-            "displayName": "mydatabase"
-          },
-          "properties": {
-            "collation": "[parameters('mydatabaseCollation')]",
-            "edition": "[parameters('mydatabaseEdition')]",
-            "maxSizeBytes": "1073741824",
-            "requestedServiceObjectiveName": "[parameters('mydatabaseRequestedServiceObjectiveName')]"
-          },
-          "resources": [
-            {
-              "name": "myimport",
-              "type": "extensions",
-              "apiVersion": "2014-04-01-preview",
-              "dependsOn": [
-                "[resourceId('Microsoft.Sql/servers/databases', split(concat(variables('myserverName'), '/', parameters('mydatabaseName')), '/')[0], split(concat(variables('myserverName'), '/', parameters('mydatabaseName')), '/')[1])]"
-              ],
-              "tags": {
-                "displayName": "myimport"
-              },
-              "properties": {
-                "administratorLogin": "[parameters('adminLogin')]",
-                "administratorLoginPassword": "[parameters('adminPassword')]",
-                "operationMode": "Import",
-                "storageUri": "[parameters('_artifactsLocation')]"
-              }
+        "type": "string"
+      }
+    },
+    "resources": [
+      {
+        "name": "[variables('myserverName')]",
+        "type": "Microsoft.Sql/servers",
+        "location": "[resourceGroup().location]",
+        "apiVersion": "2014-04-01-preview",
+        "dependsOn": [],
+        "tags": {
+          "displayName": "myserver"
+        },
+        "properties": {
+          "administratorLogin": "[parameters('adminLogin')]",
+          "administratorLoginPassword": "[parameters('adminPassword')]"
+        },
+        "resources": [
+          {
+            "name": "AllowAllWindowsAzureIps",
+            "type": "firewallrules",
+            "location": "[resourceGroup().location]",
+            "apiVersion": "2014-04-01-preview",
+            "dependsOn": [
+              "[resourceId('Microsoft.Sql/servers', variables('myserverName'))]"
+            ],
+            "properties": {
+              "startIpAddress": "0.0.0.0",
+              "endIpAddress": "0.0.0.0"
             }
-          ]
-        }
-      ]
+          },
+          {
+            "name": "[parameters('mydatabaseName')]",
+            "type": "databases",
+            "location": "[resourceGroup().location]",
+            "apiVersion": "2014-04-01-preview",
+            "dependsOn": [
+              "[resourceId('Microsoft.Sql/servers', variables('myserverName'))]"
+            ],
+            "tags": {
+              "displayName": "mydatabase"
+            },
+            "properties": {
+              "collation": "[parameters('mydatabaseCollation')]",
+              "edition": "[parameters('mydatabaseEdition')]",
+              "maxSizeBytes": "1073741824",
+              "requestedServiceObjectiveName": "[parameters('mydatabaseRequestedServiceObjectiveName')]"
+            },
+            "resources": [
+              {
+                "name": "myimport",
+                "type": "extensions",
+                "apiVersion": "2014-04-01-preview",
+                "dependsOn": [
+                  "[resourceId('Microsoft.Sql/servers/databases', split(concat(variables('myserverName'), '/', parameters('mydatabaseName')), '/')[0], split(concat(variables('myserverName'), '/', parameters('mydatabaseName')), '/')[1])]"
+                ],
+                "tags": {
+                  "displayName": "myimport"
+                },
+                "properties": {
+                  "administratorLogin": "[parameters('adminLogin')]",
+                  "administratorLoginPassword": "[parameters('adminPassword')]",
+                  "operationMode": "Import",
+                  "storageKey": "[variables('_artifactsLocationSasToken')]",
+                  "storageKeyType": "[variables('storageKeyType')]",
+                  "storageUri": "[(variables('_artifactsLocation')]"
+                }
+              }
+            ]
+          }
+        ]
+      }
+    ],
+    "variables": {
+      "myserverName": "[concat('myserver', uniqueString(resourceGroup().id))]",
+      "storageKeyType": "SharedAccessKey",
+      "_artifactsLocation": "https://intravisionresources.blob.core.windows.net/resources/mydatabase.bacpac",
+      "_artifactsLocationSasToken": "?sv=2017-04-17&ss=b&srt=o&sp=r&se=2019-12-06T07:58:18Z&st=2017-12-05T21:58:18Z&spr=https&sig=puP5I4LHFNCOE8cbUrtjvMJZqO7Gu5vkLjoPSnziIXk%3D"
     }
-  ],
-  "variables": {
-    "myserverName": "[concat('myserver', uniqueString(resourceGroup().id))]",
-    "storageKeyType": "SharedAccessKey"
   }
-}
