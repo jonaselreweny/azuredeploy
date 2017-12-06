@@ -13,7 +13,7 @@
     },
     "_artifactsLocationSasToken": {
       "type": "string",
-      "defaultValue": "?sv=2017-04-17&ss=b&srt=o&sp=r&se=2019-12-06T07:58:18Z&st=2017-12-05T21:58:18Z&spr=https&sig=puP5I4LHFNCOE8cbUrtjvMJZqO7Gu5vkLjoPSnziIXk%3D"    
+      "defaultValue": "?st=2017-09-06T00%3A22%3A00Z&se=2020-12-07T00%3A22%3A00Z&sp=r&sv=2017-04-17&sr=c&sig=lRfB8y5xO8oLHb8mpuqTSn3ME3rH%2FqRj5vsP6oXivIU%3D"    
     },
     "adminLogin": {
       "type": "string",
