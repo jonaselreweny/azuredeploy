@@ -3,17 +3,9 @@
   "contentVersion": "1.0.0.0",
   "outputs": {},
   "parameters": {
-    "storageKeyType": {
+    "siteLocation": {
       "type": "string",
-      "defaultValue": "SharedAccessKey"
-    },
-    "_artifactsLocation": {
-      "type": "string",
-      "defaultValue": "https://intravisionresources.blob.core.windows.net/resources/mydatabase.bacpac"
-    },
-    "_artifactsLocationSasToken": {
-      "type": "string",
-      "defaultValue": "?st=2017-09-06T00%3A22%3A00Z&se=2020-12-07T00%3A22%3A00Z&sp=r&sv=2017-04-17&sr=c&sig=lRfB8y5xO8oLHb8mpuqTSn3ME3rH%2FqRj5vsP6oXivIU%3D"    
+      "defaultValue": "North Europe"
     },
     "adminLogin": {
       "type": "string",
@@ -21,11 +13,6 @@
     },
     "adminPassword": {
       "type": "securestring"
-    },
-    "mydatabaseCollation": {
-      "type": "string",
-      "minLength": 1,
-      "defaultValue": "SQL_Latin1_General_CP1_CI_AS"
     },
     "mydatabaseEdition": {
       "type": "string",
@@ -35,11 +22,7 @@
         "Premium"
       ]
     },
-    "mydatabaseName": {
-      "type": "string",
-      "minLength": 1
-    },
-    "mydatabaseRequestedServiceObjectiveName": {
+    "mydatabaseTier": {
       "allowedValues": [
         "S0",
         "S1",
@@ -57,9 +40,9 @@
   },
   "resources": [
     {
-      "name": "[variables('myserverName')]",
+      "name": "[variables('mysqlserverName')]",
       "type": "Microsoft.Sql/servers",
-      "location": "[resourceGroup().location]",
+      "location": "[parameters('siteLocation')]",
       "apiVersion": "2014-04-01-preview",
       "dependsOn": [],
       "tags": {
@@ -73,9 +56,10 @@
         {
           "name": "AllowAllWindowsAzureIps",
           "type": "firewallrules",
-          "location": "[resourceGroup().location]",
-          "apiVersion": "2014-04-01-preview",            "dependsOn": [
-            "[resourceId('Microsoft.Sql/servers', variables('myserverName'))]"
+          "location": "[parameters('siteLocation')]",
+          "apiVersion": "2014-04-01-preview",            
+          "dependsOn": [
+            "[resourceId('Microsoft.Sql/servers', variables('mysqlserverName'))]"
           ],
           "properties": {
             "startIpAddress": "0.0.0.0",
@@ -83,21 +67,21 @@
           }
         },
         {
-          "name": "[parameters('mydatabaseName')]",
+          "name": "[variables('mydatabaseName')]",
           "type": "databases",
-          "location": "[resourceGroup().location]",
+          "location": "[parameters('siteLocation')]",
           "apiVersion": "2014-04-01-preview",
           "dependsOn": [
-            "[resourceId('Microsoft.Sql/servers', variables('myserverName'))]"
+            "[resourceId('Microsoft.Sql/servers', variables('mysqlserverName'))]"
           ],
           "tags": {
             "displayName": "mydatabase"
           },
           "properties": {
-            "collation": "[parameters('mydatabaseCollation')]",
+            "collation": "[variables('mydatabaseCollation')]",
             "edition": "[parameters('mydatabaseEdition')]",
             "maxSizeBytes": "1073741824",
-            "requestedServiceObjectiveName": "[parameters('mydatabaseRequestedServiceObjectiveName')]"
+            "requestedServiceObjectiveName": "[parameters('mydatabaseTier')]"
           },
           "resources": [
             {
@@ -105,7 +89,7 @@
               "type": "extensions",
               "apiVersion": "2014-04-01-preview",
               "dependsOn": [
-                "[resourceId('Microsoft.Sql/servers/databases', split(concat(variables('myserverName'), '/', parameters('mydatabaseName')), '/')[0], split(concat(variables('myserverName'), '/', parameters('mydatabaseName')), '/')[1])]"
+                "[resourceId('Microsoft.Sql/servers/databases', split(concat(variables('mysqlserverName'), '/', variables('mydatabaseName')), '/')[0], split(concat(variables('mysqlserverName'), '/', variables('mydatabaseName')), '/')[1])]"
               ],
               "tags": {
                 "displayName": "myimport"
@@ -114,9 +98,9 @@
                 "administratorLogin": "[parameters('adminLogin')]",
                 "administratorLoginPassword": "[parameters('adminPassword')]",
                 "operationMode": "Import",
-                "storageKey": "[parameters('_artifactsLocationSasToken')]",
-                "storageKeyType": "[parameters('storageKeyType')]",
-                "storageUri": "[parameters('_artifactsLocation')]"
+                "storageKey": "[variables('_artifactsLocationSasToken')]",
+                "storageKeyType": "[variables('storageKeyType')]",
+                "storageUri": "[variables('_artifactsLocation')]"
               }
             }
           ]
@@ -125,6 +109,11 @@
     }
   ],
   "variables": {
-    "myserverName": "[concat('myserver', uniqueString(resourceGroup().id))]"
+    "mysqlserverName": "[concat('ontimesqlsrv', uniqueString(resourceGroup().id))]",
+    "mydatabaseCollation": "SQL_Latin1_General_CP1_CI_AS",
+    "_artifactsLocation": "https://intravisionresources.blob.core.windows.net/resources/mydatabase.bacpac",
+    "_artifactsLocationSasToken": "?st=2017-09-06T00%3A22%3A00Z&se=2020-12-07T00%3A22%3A00Z&sp=r&sv=2017-04-17&sr=c&sig=lRfB8y5xO8oLHb8mpuqTSn3ME3rH%2FqRj5vsP6oXivIU%3D",
+    "storageKeyType": "SharedAccessKey",
+    "mydatabaseName": "[concat('ontimedb', uniqueString(resourceGroup().id))]"  
   }
 }
