@@ -3,6 +3,10 @@
   "contentVersion": "1.0.0.0",
   "outputs": {},
   "parameters": {
+    "siteLocation": {
+      "type": "string",
+      "defaultValue": "North Europe"
+    },
     "adminLogin": {
       "type": "string",
       "minLength": 1
@@ -38,7 +42,7 @@
     {
       "name": "[variables('mysqlserverName')]",
       "type": "Microsoft.Sql/servers",
-      "location": "[resourceGroup().location]",
+      "location": "[parameters('siteLocation')]",
       "apiVersion": "2014-04-01-preview",
       "dependsOn": [],
       "tags": {
@@ -52,7 +56,7 @@
         {
           "name": "AllowAllWindowsAzureIps",
           "type": "firewallrules",
-          "location": "[resourceGroup().location]",
+          "location": "[parameters('siteLocation')]",
           "apiVersion": "2014-04-01-preview",            
           "dependsOn": [
             "[resourceId('Microsoft.Sql/servers', variables('mysqlserverName'))]"
@@ -65,7 +69,7 @@
         {
           "name": "[variables('mydatabaseName')]",
           "type": "databases",
-          "location": "[resourceGroup().location]",
+          "location": "[parameters('siteLocation')]",
           "apiVersion": "2014-04-01-preview",
           "dependsOn": [
             "[resourceId('Microsoft.Sql/servers', variables('mysqlserverName'))]"
