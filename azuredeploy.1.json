@@ -109,7 +109,7 @@
     }
   ],
   "variables": {
-    "mysqlserverName": "[concat('ontimeserver', uniqueString(resourceGroup().id))]",
+    "mysqlserverName": "[concat('ontimesqlsrv', uniqueString(resourceGroup().id))]",
     "mydatabaseCollation": "SQL_Latin1_General_CP1_CI_AS",
     "_artifactsLocation": "https://intravisionresources.blob.core.windows.net/resources/mydatabase.bacpac",
     "_artifactsLocationSasToken": "?st=2017-09-06T00%3A22%3A00Z&se=2020-12-07T00%3A22%3A00Z&sp=r&sv=2017-04-17&sr=c&sig=lRfB8y5xO8oLHb8mpuqTSn3ME3rH%2FqRj5vsP6oXivIU%3D",
